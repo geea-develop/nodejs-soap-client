@@ -62,7 +62,7 @@ var Client = /** @class */ (function () {
         configurable: true
     });
     /**
-     * @returns string | {response: object} | null
+     * @returns AxiosResponse
      */
     Client.prototype.execute = function (action, config, mock) {
         if (mock === void 0) { mock = false; }
@@ -97,14 +97,15 @@ var Client = /** @class */ (function () {
                         return [3 /*break*/, 7];
                     case 6:
                         e_1 = _b.sent();
-                        return [2 /*return*/, this.processError(e_1)];
+                        response = this.processError(e_1);
+                        return [3 /*break*/, 7];
                     case 7: return [2 /*return*/, this.processResponse(response)];
                 }
             });
         });
     };
     /**
-     * @returns string | {response: object} | null
+     * @returns AxiosResponse
      */
     Client.prototype.executeMock = function (action, config) {
         return __awaiter(this, void 0, void 0, function () {
@@ -117,24 +118,34 @@ var Client = /** @class */ (function () {
         });
     };
     /**
-      * @returns string
+      * @returns AxiosResponse
       */
     Client.prototype.processError = function (e) {
         if (e.response) {
             console.log("SOAP FAIL: " + e);
-            return e.response.data;
+            return e.response;
         }
         else {
             console.log("SOAP FAIL: " + e);
-            return e;
+            return {
+                status: 500,
+                statusText: 'Unknown error',
+                headers: {},
+                config: {}
+            };
         }
     };
     /**
-     * @returns {response: object} | null
+     * @returns AxiosResponse
      */
     Client.prototype.processResponse = function (response) {
         if (!response)
-            return null;
+            return {
+                status: 500,
+                statusText: 'Empty response',
+                headers: {},
+                config: {}
+            };
         return {
             response: {
                 body: response.data,

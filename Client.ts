@@ -27,7 +27,7 @@ export class Client {
     }
 
     /**
-     * @returns string | {response: object} | null
+     * @returns AxiosResponse
      */
     async execute(action: string, config: ClientConfig, mock = false) {
        this.config = { ...this.config, ...config};
@@ -50,37 +50,47 @@ export class Client {
               await SoapRequest.executeMock()
               : await SoapRequest.execute();
         } catch (e) {
-            return this.processError(e);
+           response = this.processError(e);
         }
 
         return this.processResponse(response);
     }
 
     /**
-     * @returns string | {response: object} | null
+     * @returns AxiosResponse
      */
     async executeMock(action: string, config: ClientConfig) {
         return await this.execute(action, config, true);
     }
 
     /**
-      * @returns string
+      * @returns AxiosResponse
       */
     processError(e: any) {
         if (e.response) {
             console.log(`SOAP FAIL: ${e}`);
-            return e.response.data;
+            return e.response;
         } else {
             console.log(`SOAP FAIL: ${e}`);
-            return e
+            return {
+                status: 500,
+                statusText: 'Unknown error',
+                headers: {},
+                config: {}
+            }
         }
     }
 
     /**
-     * @returns {response: object} | null
+     * @returns AxiosResponse
      */
-    processResponse(response: AxiosResponse|null) {
-        if (!response) return null;
+    processResponse(response: AxiosResponse) {
+        if (!response) return {
+            status: 500,
+            statusText: 'Empty response',
+            headers: {},
+            config: {}
+        };
 
         return {
             response: {
