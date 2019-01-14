@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -35,23 +46,101 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var SoapRequests_1 = require("./SoapRequests");
 var Client = /** @class */ (function () {
-    function Client() {
-        this._config = {};
+    function Client(config) {
+        this._config = config;
     }
     Object.defineProperty(Client.prototype, "config", {
         get: function () {
             return this._config;
         },
+        set: function (value) {
+            this._config = value;
+        },
         enumerable: true,
         configurable: true
     });
-    Client.prototype.execute = function (action, config) {
+    /**
+     * @returns string | {response: object} | null
+     */
+    Client.prototype.execute = function (action, config, mock) {
+        if (mock === void 0) { mock = false; }
         return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/];
+            var SoapRequest, response, _a, e_1;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        this.config = __assign({}, this.config, config);
+                        if (SoapRequests_1.SoapRequests[action]) {
+                            SoapRequest = new SoapRequests_1.SoapRequests[action](this.config);
+                        }
+                        else {
+                            throw "Soap request not found: " + action;
+                        }
+                        if (mock)
+                            console.log("SOAP MOCK ENABLED");
+                        _b.label = 1;
+                    case 1:
+                        _b.trys.push([1, 6, , 7]);
+                        if (!mock) return [3 /*break*/, 3];
+                        return [4 /*yield*/, SoapRequest.executeMock()];
+                    case 2:
+                        _a = _b.sent();
+                        return [3 /*break*/, 5];
+                    case 3: return [4 /*yield*/, SoapRequest.execute()];
+                    case 4:
+                        _a = _b.sent();
+                        _b.label = 5;
+                    case 5:
+                        response = _a;
+                        return [3 /*break*/, 7];
+                    case 6:
+                        e_1 = _b.sent();
+                        return [2 /*return*/, this.processError(e_1)];
+                    case 7: return [2 /*return*/, this.processResponse(response)];
+                }
             });
         });
+    };
+    /**
+     * @returns string | {response: object} | null
+     */
+    Client.prototype.executeMock = function (action, config) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.execute(action, config, true)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    /**
+      * @returns string
+      */
+    Client.prototype.processError = function (e) {
+        if (e.response) {
+            console.log("SOAP FAIL: " + e);
+            return e.response.data;
+        }
+        else {
+            console.log("SOAP FAIL: " + e);
+            return e;
+        }
+    };
+    /**
+     * @returns {response: object} | null
+     */
+    Client.prototype.processResponse = function (response) {
+        if (!response)
+            return null;
+        return {
+            response: {
+                body: response.data,
+                statusCode: response.status,
+            }
+        };
     };
     return Client;
 }());
