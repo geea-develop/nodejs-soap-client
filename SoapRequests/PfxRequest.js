@@ -1,17 +1,4 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    }
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -53,15 +40,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = __importDefault(require("axios"));
 var https_1 = __importDefault(require("https"));
-var SoapRequest_1 = require("./SoapRequest");
-var PfxRequest = /** @class */ (function (_super) {
-    __extends(PfxRequest, _super);
+var PfxRequest = /** @class */ (function () {
     function PfxRequest(config) {
-        var _this = _super.call(this, config) || this;
-        /**
-         * @returns AxiosResponse
-         */
-        _this.execute = function () { return __awaiter(_this, void 0, void 0, function () {
+        this._config = config;
+    }
+    Object.defineProperty(PfxRequest.prototype, "config", {
+        get: function () {
+            return this._config;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * @returns AxiosResponse
+     */
+    PfxRequest.prototype.execute = function () {
+        return __awaiter(this, void 0, void 0, function () {
             var _a, url, xml, pfxFilePath, pfxPass, headers, _b, timeout;
             return __generator(this, function (_c) {
                 switch (_c.label) {
@@ -81,11 +75,14 @@ var PfxRequest = /** @class */ (function (_super) {
                     case 1: return [2 /*return*/, _c.sent()];
                 }
             });
-        }); };
-        /**
-         * @returns AxiosResponse
-         */
-        _this.executeMock = function () { return __awaiter(_this, void 0, void 0, function () {
+        });
+    };
+    ;
+    /**
+     * @returns AxiosResponse
+     */
+    PfxRequest.prototype.executeMock = function () {
+        return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, {
                         data: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"><s:Body></s:Body></s:Envelope>",
@@ -95,16 +92,8 @@ var PfxRequest = /** @class */ (function (_super) {
                         config: {}
                     }];
             });
-        }); };
-        return _this;
-    }
-    Object.defineProperty(PfxRequest.prototype, "config", {
-        get: function () {
-            return this._config;
-        },
-        enumerable: true,
-        configurable: true
-    });
+        });
+    };
     return PfxRequest;
-}(SoapRequest_1.SoapRequest));
+}());
 exports.PfxRequest = PfxRequest;

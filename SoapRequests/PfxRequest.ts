@@ -7,10 +7,12 @@ interface PfxRequestConfig extends ClientConfig {
 
 }
 
-export class PfxRequest extends SoapRequest {
+export class PfxRequest implements SoapRequest {
+
+    private _config: PfxRequestConfig;
 
     constructor(config: PfxRequestConfig) {
-        super(config);
+        this._config = config
     }
 
     get config(): PfxRequestConfig {
@@ -20,7 +22,7 @@ export class PfxRequest extends SoapRequest {
     /**
      * @returns AxiosResponse
      */
-    execute = async () => {
+    async execute(): Promise<AxiosResponse> {
         let {url, xml, pfxFilePath, pfxPass, headers, timeout = 120000} = this.config;
 
         return await axios({
@@ -39,7 +41,7 @@ export class PfxRequest extends SoapRequest {
     /**
      * @returns AxiosResponse
      */
-    executeMock = async () => {
+    async executeMock(): Promise<AxiosResponse> {
         return {
                 data: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"><s:Body></s:Body></s:Envelope>",
                 status: 200,

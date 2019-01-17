@@ -1,5 +1,6 @@
 import {AxiosResponse} from "axios";
 import {SoapRequest, SoapRequests} from "./SoapRequests";
+import {DefaultSoapRequest} from "./SoapRequests/DefaultSoapRequest";
 
 export interface ClientConfig {
     url?: any,
@@ -7,15 +8,22 @@ export interface ClientConfig {
     headers?: any,
     timeout?: number,
     pfxFilePath?: any,
-    pfxPass?: any
+    pfxPass?: any,
+    isDebug?: boolean
 }
 
 export class Client {
 
     private _config: ClientConfig;
+    private _soapRequest: SoapRequest;
+    private _logger: [any];
 
     constructor(config: ClientConfig) {
         this._config = config
+        this._soapRequest = new DefaultSoapRequest(config);
+        this._logger = [{
+            title: '[SOAP Client initiated]'
+        }];
     }
 
     get config(): ClientConfig {
@@ -26,16 +34,26 @@ export class Client {
         this._config = value;
     }
 
+    get soapRequest(): SoapRequest {
+        return this._soapRequest;
+    }
+
+    set soapRequest(value: SoapRequest) {
+        this._soapRequest = value;
+    }
+
+    get logger(): [any] {
+        return this._logger;
+    }
+
     /**
      * @returns AxiosResponse
      */
-    async execute(action: string, config: ClientConfig, mock = false) {
+    async execute(action: string, config: ClientConfig = {}, mock = false) {
        this.config = { ...this.config, ...config};
 
-       let SoapRequest: SoapRequest;
-
        if (SoapRequests[action]) {
-           SoapRequest = new SoapRequests[action](this.config);
+           this.soapRequest = new SoapRequests[action](this.config);
        } else {
            throw "Soap request not found: " + action;
        }
@@ -43,12 +61,12 @@ export class Client {
        let response: AxiosResponse;
 
        if (mock)
-        console.log(`SOAP MOCK ENABLED`);
+           this._logger.push({title: `SOAP MOCK ENABLED`});
 
        try {
             response = mock ?
-              await SoapRequest.executeMock()
-              : await SoapRequest.execute();
+              await this.soapRequest.executeMock()
+              : await this.soapRequest.execute();
         } catch (e) {
            response = this.processError(e);
         }
@@ -59,7 +77,7 @@ export class Client {
     /**
      * @returns AxiosResponse
      */
-    async executeMock(action: string, config: ClientConfig) {
+    async executeMock(action: string, config: ClientConfig = {}) {
         return await this.execute(action, config, true);
     }
 
@@ -67,11 +85,22 @@ export class Client {
       * @returns AxiosResponse
       */
     processError(e: any) {
+
+        if (this.config.isDebug)
+            this._logger.push({
+                title: '[SOAP Client] processError ',
+                data: e
+            })
+
         if (e.response) {
-            console.log(`SOAP FAIL: ${e}`);
+            this._logger.push({
+                title: `SOAP FAIL: ${e}`
+            });
             return e.response;
         } else {
-            console.log(`SOAP FAIL: ${e}`);
+            this._logger.push({
+                title: `SOAP FAIL: ${e}`
+            });
             return {
                 status: 500,
                 statusText: 'Unknown error',
@@ -85,6 +114,11 @@ export class Client {
      * @returns AxiosResponse
      */
     processResponse(response: AxiosResponse) {
+        this._logger.push({
+            title: `[Client] processResponse `,
+            data: response
+        });
+
         if (!response) return {
             status: 500,
             statusText: 'Empty response',

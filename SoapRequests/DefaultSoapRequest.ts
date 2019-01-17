@@ -1,21 +1,19 @@
-import { ClientConfig } from "../Client";
+import {SoapRequest} from "./SoapRequest";
+import {ClientConfig} from "../Client";
 import {AxiosResponse} from "axios";
 
-export abstract class SoapRequest {
-
+export class DefaultSoapRequest implements SoapRequest {
     constructor(config: ClientConfig) {
 
     }
 
-    get config(): ClientConfig { return {} as ClientConfig }
+    get config(): ClientConfig {
+        return {} as ClientConfig;
+    }
 
-    /**
-     * @returns AxiosResponse
-     */
     async execute(): Promise<AxiosResponse> { return {} as AxiosResponse}
 
-    /**
-     * @returns AxiosResponse
-     */
+
     async executeMock(): Promise<AxiosResponse> { return {} as AxiosResponse}
+
 }

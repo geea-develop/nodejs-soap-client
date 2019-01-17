@@ -47,9 +47,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var SoapRequests_1 = require("./SoapRequests");
+var DefaultSoapRequest_1 = require("./SoapRequests/DefaultSoapRequest");
 var Client = /** @class */ (function () {
     function Client(config) {
         this._config = config;
+        this._soapRequest = new DefaultSoapRequest_1.DefaultSoapRequest(config);
+        this._logger = [{
+                title: '[SOAP Client initiated]'
+            }];
     }
     Object.defineProperty(Client.prototype, "config", {
         get: function () {
@@ -61,34 +66,52 @@ var Client = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Client.prototype, "soapRequest", {
+        get: function () {
+            return this._soapRequest;
+        },
+        set: function (value) {
+            this._soapRequest = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Client.prototype, "logger", {
+        get: function () {
+            return this._logger;
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * @returns AxiosResponse
      */
     Client.prototype.execute = function (action, config, mock) {
+        if (config === void 0) { config = {}; }
         if (mock === void 0) { mock = false; }
         return __awaiter(this, void 0, void 0, function () {
-            var SoapRequest, response, _a, e_1;
+            var response, _a, e_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         this.config = __assign({}, this.config, config);
                         if (SoapRequests_1.SoapRequests[action]) {
-                            SoapRequest = new SoapRequests_1.SoapRequests[action](this.config);
+                            this.soapRequest = new SoapRequests_1.SoapRequests[action](this.config);
                         }
                         else {
                             throw "Soap request not found: " + action;
                         }
                         if (mock)
-                            console.log("SOAP MOCK ENABLED");
+                            this._logger.push({ title: "SOAP MOCK ENABLED" });
                         _b.label = 1;
                     case 1:
                         _b.trys.push([1, 6, , 7]);
                         if (!mock) return [3 /*break*/, 3];
-                        return [4 /*yield*/, SoapRequest.executeMock()];
+                        return [4 /*yield*/, this.soapRequest.executeMock()];
                     case 2:
                         _a = _b.sent();
                         return [3 /*break*/, 5];
-                    case 3: return [4 /*yield*/, SoapRequest.execute()];
+                    case 3: return [4 /*yield*/, this.soapRequest.execute()];
                     case 4:
                         _a = _b.sent();
                         _b.label = 5;
@@ -108,6 +131,7 @@ var Client = /** @class */ (function () {
      * @returns AxiosResponse
      */
     Client.prototype.executeMock = function (action, config) {
+        if (config === void 0) { config = {}; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -121,12 +145,21 @@ var Client = /** @class */ (function () {
       * @returns AxiosResponse
       */
     Client.prototype.processError = function (e) {
+        if (this.config.isDebug)
+            this._logger.push({
+                title: '[SOAP Client] processError ',
+                data: e
+            });
         if (e.response) {
-            console.log("SOAP FAIL: " + e);
+            this._logger.push({
+                title: "SOAP FAIL: " + e
+            });
             return e.response;
         }
         else {
-            console.log("SOAP FAIL: " + e);
+            this._logger.push({
+                title: "SOAP FAIL: " + e
+            });
             return {
                 status: 500,
                 statusText: 'Unknown error',
@@ -139,6 +172,10 @@ var Client = /** @class */ (function () {
      * @returns AxiosResponse
      */
     Client.prototype.processResponse = function (response) {
+        this._logger.push({
+            title: "[Client] processResponse ",
+            data: response
+        });
         if (!response)
             return {
                 status: 500,

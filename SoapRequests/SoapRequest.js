@@ -37,32 +37,28 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var SoapRequest = /** @class */ (function () {
     function SoapRequest(config) {
-        var _this = this;
-        /**
-         * @returns AxiosResponse
-         */
-        this.execute = function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/, ({})
-                /**
-                 * @returns AxiosResponse
-                 */
-            ];
-        }); }); };
-        /**
-         * @returns AxiosResponse
-         */
-        this.executeMock = function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/, ({})];
-        }); }); };
-        this._config = config;
     }
     Object.defineProperty(SoapRequest.prototype, "config", {
-        get: function () {
-            return this._config;
-        },
+        get: function () { return {}; },
         enumerable: true,
         configurable: true
     });
+    /**
+     * @returns AxiosResponse
+     */
+    SoapRequest.prototype.execute = function () {
+        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+            return [2 /*return*/, {}];
+        }); });
+    };
+    /**
+     * @returns AxiosResponse
+     */
+    SoapRequest.prototype.executeMock = function () {
+        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+            return [2 /*return*/, {}];
+        }); });
+    };
     return SoapRequest;
 }());
 exports.SoapRequest = SoapRequest;

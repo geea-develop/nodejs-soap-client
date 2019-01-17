@@ -1,4 +1,5 @@
 import {PfxRequest, SoapRequest} from "./index";
+import {DefaultSoapRequest} from "./DefaultSoapRequest";
 
 interface INameToValueMap
 {
@@ -7,5 +8,5 @@ interface INameToValueMap
 
 export const SoapRequests: INameToValueMap = {
     PfxRequest: PfxRequest,
-    SoapRequest: SoapRequest
+    DefaultSoapRequest: DefaultSoapRequest
 };
