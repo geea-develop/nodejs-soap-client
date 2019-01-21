@@ -172,10 +172,6 @@ var Client = /** @class */ (function () {
      * @returns AxiosResponse
      */
     Client.prototype.processResponse = function (response) {
-        this._logger.push({
-            title: "[Client] processResponse ",
-            data: response
-        });
         if (!response)
             return {
                 status: 500,
@@ -183,6 +179,10 @@ var Client = /** @class */ (function () {
                 headers: {},
                 config: {}
             };
+        this._logger.push({
+            title: "[Client] processResponse ",
+            data: response.data
+        });
         return {
             response: {
                 body: response.data,

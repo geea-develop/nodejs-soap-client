@@ -114,10 +114,6 @@ export class Client {
      * @returns AxiosResponse
      */
     processResponse(response: AxiosResponse) {
-        this._logger.push({
-            title: `[Client] processResponse `,
-            data: response
-        });
 
         if (!response) return {
             status: 500,
@@ -125,6 +121,11 @@ export class Client {
             headers: {},
             config: {}
         };
+
+	      this._logger.push({
+            title: `[Client] processResponse `,
+            data: response.data
+        });
 
         return {
             response: {

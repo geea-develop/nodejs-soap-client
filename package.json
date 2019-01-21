@@ -16,6 +16,8 @@
     "typescript": "^3.2.2"
   },
   "dependencies": {
-    "axios": "^0.18.0"
+    "@types/node": "^10.12.18",
+    "axios": "^0.18.0",
+    "https": "^1.0.0"
   }
 }
