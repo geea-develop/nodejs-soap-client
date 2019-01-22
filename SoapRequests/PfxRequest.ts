@@ -1,7 +1,9 @@
 import axios, { AxiosResponse } from "axios";
-import https from "https";
+import * as https from "https";
 import { ClientConfig } from "../Client";
 import { SoapRequest } from "./SoapRequest";
+import * as fs from "fs";
+
 
 interface PfxRequestConfig extends ClientConfig {
 
@@ -32,7 +34,7 @@ export class PfxRequest implements SoapRequest {
             data: xml,
             timeout,
             httpsAgent: new https.Agent({
-                pfx: require('fs').readFileSync(pfxFilePath),
+                pfx: fs.readFileSync(pfxFilePath),
                 passphrase: pfxPass
             })
         });
