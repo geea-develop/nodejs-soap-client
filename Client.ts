@@ -89,17 +89,17 @@ export class Client {
         if (this.config.isDebug)
             this._logger.push({
                 title: '[SOAP Client] processError ',
-                data: e
+                data: e.message
             })
 
         if (e.response) {
             this._logger.push({
-                title: `SOAP FAIL: ${e}`
+                title: `SOAP FAIL: ${e.message}`
             });
             return e.response;
         } else {
             this._logger.push({
-                title: `SOAP FAIL: ${e}`
+                title: `SOAP FAIL: ${e.message}`
             });
             return {
                 status: 500,
