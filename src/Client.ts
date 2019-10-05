@@ -86,6 +86,7 @@ export class Client {
       */
     processError(e: any) {
 
+        console.error("[SOAP Client] processError", e);
         if (this.config.isDebug)
             this._logger.push({
                 title: '[SOAP Client] processError ',

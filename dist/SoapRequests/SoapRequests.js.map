@@ -1,1 +1,1 @@
-{"version":3,"file":"SoapRequests.js","sourceRoot":"","sources":["../../SoapRequests/SoapRequests.ts"],"names":[],"mappings":";;AAAA,iCAAgD;AAChD,2DAAwD;AAO3C,QAAA,YAAY,GAAoB;IACzC,UAAU,EAAE,kBAAU;IACtB,kBAAkB,EAAE,uCAAkB;CACzC,CAAC"}
+{"version":3,"file":"SoapRequests.js","sourceRoot":"","sources":["../../src/SoapRequests/SoapRequests.ts"],"names":[],"mappings":";;AAAA,iCAAgD;AAChD,2DAAwD;AAO3C,QAAA,YAAY,GAAoB;IACzC,UAAU,EAAE,kBAAU;IACtB,kBAAkB,EAAE,uCAAkB;CACzC,CAAC"}
