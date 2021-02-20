@@ -11,10 +11,11 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -46,6 +47,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Client = void 0;
 var SoapRequests_1 = require("./SoapRequests");
 var DefaultSoapRequest_1 = require("./SoapRequests/DefaultSoapRequest");
 var Client = /** @class */ (function () {
@@ -63,7 +65,7 @@ var Client = /** @class */ (function () {
         set: function (value) {
             this._config = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Client.prototype, "soapRequest", {
@@ -73,14 +75,14 @@ var Client = /** @class */ (function () {
         set: function (value) {
             this._soapRequest = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Client.prototype, "logger", {
         get: function () {
             return this._logger;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -94,7 +96,7 @@ var Client = /** @class */ (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        this.config = __assign({}, this.config, config);
+                        this.config = __assign(__assign({}, this.config), config);
                         if (SoapRequests_1.SoapRequests[action]) {
                             this.soapRequest = new SoapRequests_1.SoapRequests[action](this.config);
                         }
@@ -145,6 +147,7 @@ var Client = /** @class */ (function () {
       * @returns AxiosResponse
       */
     Client.prototype.processError = function (e) {
+        console.error("[SOAP Client] processError", e);
         if (this.config.isDebug)
             this._logger.push({
                 title: '[SOAP Client] processError ',

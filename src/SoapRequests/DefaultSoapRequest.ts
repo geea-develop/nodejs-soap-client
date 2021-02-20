@@ -1,6 +1,6 @@
 import {SoapRequest} from "./SoapRequest";
 import {ClientConfig} from "../Client";
-import {AxiosResponse} from "axios";
+import axios, { AxiosResponse } from "axios";
 
 export class DefaultSoapRequest implements SoapRequest {
     constructor(config: ClientConfig) {
@@ -11,9 +11,31 @@ export class DefaultSoapRequest implements SoapRequest {
         return {} as ClientConfig;
     }
 
-    async execute(): Promise<AxiosResponse> { return {} as AxiosResponse}
+    /**
+     * @returns AxiosResponse
+     */
+    async execute(): Promise<AxiosResponse> {
+        let {url, xml, headers, timeout = 120000} = this.config;
 
+        return await axios({
+            method: 'post',
+            url,
+            headers,
+            data: xml,
+            timeout
+        });
+    };
 
-    async executeMock(): Promise<AxiosResponse> { return {} as AxiosResponse}
-
+    /**
+     * @returns AxiosResponse
+     */
+    async executeMock(): Promise<AxiosResponse> {
+        return {
+                data: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"><s:Body></s:Body></s:Envelope>",
+                status: 200,
+                statusText: 'OK',
+                headers: {},
+                config: {}
+            }
+    }
 }

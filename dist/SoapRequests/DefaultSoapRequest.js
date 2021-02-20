@@ -1,9 +1,10 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -35,6 +36,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DefaultSoapRequest = void 0;
+var axios_1 = require("axios");
 var DefaultSoapRequest = /** @class */ (function () {
     function DefaultSoapRequest(config) {
     }
@@ -42,18 +45,47 @@ var DefaultSoapRequest = /** @class */ (function () {
         get: function () {
             return {};
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
+    /**
+     * @returns AxiosResponse
+     */
     DefaultSoapRequest.prototype.execute = function () {
-        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/, {}];
-        }); });
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, url, xml, headers, _b, timeout;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        _a = this.config, url = _a.url, xml = _a.xml, headers = _a.headers, _b = _a.timeout, timeout = _b === void 0 ? 120000 : _b;
+                        return [4 /*yield*/, axios_1.default({
+                                method: 'post',
+                                url: url,
+                                headers: headers,
+                                data: xml,
+                                timeout: timeout
+                            })];
+                    case 1: return [2 /*return*/, _c.sent()];
+                }
+            });
+        });
     };
+    ;
+    /**
+     * @returns AxiosResponse
+     */
     DefaultSoapRequest.prototype.executeMock = function () {
-        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/, {}];
-        }); });
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, {
+                        data: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"><s:Body></s:Body></s:Envelope>",
+                        status: 200,
+                        statusText: 'OK',
+                        headers: {},
+                        config: {}
+                    }];
+            });
+        });
     };
     return DefaultSoapRequest;
 }());

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SoapRequests = void 0;
 var index_1 = require("./index");
 var DefaultSoapRequest_1 = require("./DefaultSoapRequest");
 exports.SoapRequests = {
