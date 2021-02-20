@@ -3,13 +3,16 @@ import {ClientConfig} from "../Client";
 import axios, { AxiosResponse } from "axios";
 
 export class DefaultSoapRequest implements SoapRequest {
-    constructor(config: ClientConfig) {
+  private _config: ClientConfig;
 
-    }
+  constructor(config: ClientConfig) {
+      this._config = config
+  }
 
-    get config(): ClientConfig {
-        return {} as ClientConfig;
-    }
+  get config(): ClientConfig {
+      return this._config;
+  }
+
 
     /**
      * @returns AxiosResponse

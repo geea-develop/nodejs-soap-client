@@ -40,10 +40,11 @@ exports.DefaultSoapRequest = void 0;
 var axios_1 = require("axios");
 var DefaultSoapRequest = /** @class */ (function () {
     function DefaultSoapRequest(config) {
+        this._config = config;
     }
     Object.defineProperty(DefaultSoapRequest.prototype, "config", {
         get: function () {
-            return {};
+            return this._config;
         },
         enumerable: false,
         configurable: true
