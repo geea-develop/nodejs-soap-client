@@ -12,7 +12,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/axios": "^0.14.0",
-    "@types/node": "^15.0.2",
+    "@types/node": "^15.6.1",
     "ts-loader": "9.1.2",
     "eslint": "7.23.0",
     "tslint": "6.1.3",
